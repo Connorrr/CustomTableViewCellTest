@@ -8,20 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		BF5287971E4D4DA600B77400 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5287961E4D4DA600B77400 /* AppDelegate.swift */; };
-		BF5287991E4D4DA600B77400 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5287981E4D4DA600B77400 /* ViewController.swift */; };
 		BF52879C1E4D4DA600B77400 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF52879A1E4D4DA600B77400 /* Main.storyboard */; };
 		BF52879E1E4D4DA600B77400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF52879D1E4D4DA600B77400 /* Assets.xcassets */; };
 		BF5287A11E4D4DA600B77400 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF52879F1E4D4DA600B77400 /* LaunchScreen.storyboard */; };
+		BF5287AB1E4D705500B77400 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5287AA1E4D705500B77400 /* ViewController.swift */; };
+		BF5287AD1E4D74A600B77400 /* DCTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5287AC1E4D74A500B77400 /* DCTableViewCell.swift */; };
+		BF5287AF1E4D81B700B77400 /* Colours.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5287AE1E4D81B700B77400 /* Colours.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BF5287931E4D4DA600B77400 /* CustomTableViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomTableViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5287961E4D4DA600B77400 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BF5287981E4D4DA600B77400 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BF52879B1E4D4DA600B77400 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BF52879D1E4D4DA600B77400 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BF5287A01E4D4DA600B77400 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BF5287A21E4D4DA600B77400 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BF5287AA1E4D705500B77400 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ../ViewController.swift; sourceTree = "<group>"; };
+		BF5287AC1E4D74A500B77400 /* DCTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DCTableViewCell.swift; path = ../DCTableViewCell.swift; sourceTree = "<group>"; };
+		BF5287AE1E4D81B700B77400 /* Colours.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Colours.swift; path = ../Colours.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +58,10 @@
 		BF5287951E4D4DA600B77400 /* CustomTableViewTest */ = {
 			isa = PBXGroup;
 			children = (
+				BF5287AE1E4D81B700B77400 /* Colours.swift */,
 				BF5287961E4D4DA600B77400 /* AppDelegate.swift */,
-				BF5287981E4D4DA600B77400 /* ViewController.swift */,
+				BF5287AA1E4D705500B77400 /* ViewController.swift */,
+				BF5287AC1E4D74A500B77400 /* DCTableViewCell.swift */,
 				BF52879A1E4D4DA600B77400 /* Main.storyboard */,
 				BF52879D1E4D4DA600B77400 /* Assets.xcassets */,
 				BF52879F1E4D4DA600B77400 /* LaunchScreen.storyboard */,
@@ -137,8 +143,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF5287991E4D4DA600B77400 /* ViewController.swift in Sources */,
+				BF5287AD1E4D74A600B77400 /* DCTableViewCell.swift in Sources */,
+				BF5287AB1E4D705500B77400 /* ViewController.swift in Sources */,
 				BF5287971E4D4DA600B77400 /* AppDelegate.swift in Sources */,
+				BF5287AF1E4D81B700B77400 /* Colours.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
