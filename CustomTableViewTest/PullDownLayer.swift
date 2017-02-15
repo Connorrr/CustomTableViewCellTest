@@ -12,12 +12,15 @@ import UIKit
 class PullDownLayer: CAShapeLayer {
     
     var height: CGFloat
+    var width: CGFloat
     
     fileprivate var splines = [[CGPoint]]()
     
-    init(tableViewHeight: CGFloat){
-        height = tableViewHeight
+    init(frame: CGRect){
+        height = frame.height
+        width = frame.width
         super.init()
+        self.initPoints()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -26,13 +29,13 @@ class PullDownLayer: CAShapeLayer {
 
     func initPoints(){
         
-        let width = frame.width
+        //print("width: \(width), height \(height)")
         
         //  Starting points
         var firstPoint = CGPoint(x: 0.0, y: 0.0)
-        var secondPoint = CGPoint(x: 0.0, y: 0.0)
-        var thirdPoint = CGPoint(x: width/2, y: 0.0)
-        var fourthPoint = CGPoint(x: width, y: 0.0)
+        var secondPoint = CGPoint(x: 0.0, y: 1.0)
+        var thirdPoint = CGPoint(x: width/2, y: 1.0)
+        var fourthPoint = CGPoint(x: width, y: 1.0)
         var fifthPoint = CGPoint(x: width, y: 0.0)
         
         let first = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
@@ -40,9 +43,9 @@ class PullDownLayer: CAShapeLayer {
         
         //  Second points
         firstPoint = CGPoint(x: 0.0, y: 0.0)
-        secondPoint = CGPoint(x: 0.0, y: 0.0)
+        secondPoint = CGPoint(x: 0.0, y: 1.0)
         thirdPoint = CGPoint(x: width/2, y: height/4)
-        fourthPoint = CGPoint(x: width, y: 0.0)
+        fourthPoint = CGPoint(x: width, y: 1.0)
         fifthPoint = CGPoint(x: width, y: 0.0)
         
         let second = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
@@ -78,6 +81,8 @@ class PullDownLayer: CAShapeLayer {
         let fifth = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
         splines.append(fifth)
         
+        dump(splines)
+        
     }
     
     //  Shape 1 Bezier Path
@@ -85,7 +90,7 @@ class PullDownLayer: CAShapeLayer {
         let path = UIBezierPath()
         path.move(to: splines[0][0])
         path.addLine(to: splines[0][1])
-        path.addLine(to: splines[0][2])
+        //path.addLine(to: splines[0][2])
         path.addLine(to: splines[0][3])
         path.addLine(to: splines[0][4])
         path.close()
@@ -96,7 +101,8 @@ class PullDownLayer: CAShapeLayer {
     func getSecondPath() -> UIBezierPath {
         let path = UIBezierPath()
         path.move(to: splines[1][0])
-        path.addCurve(to: splines[1][3], controlPoint1: splines[1][1], controlPoint2: splines[1][2])
+        path.addLine(to: splines[1][1])
+        path.addQuadCurve(to: splines[1][3], controlPoint: splines[1][2])
         path.addLine(to: splines[1][4])
         path.close()
         return path
@@ -107,7 +113,7 @@ class PullDownLayer: CAShapeLayer {
         let path = UIBezierPath()
         path.move(to: splines[2][0])
         path.addLine(to: splines[2][1])
-        path.addLine(to: splines[2][2])
+        //path.addLine(to: splines[2][2])
         path.addLine(to: splines[2][3])
         path.addLine(to: splines[2][4])
         path.close()
@@ -118,7 +124,8 @@ class PullDownLayer: CAShapeLayer {
     func getFourthPath() -> UIBezierPath {
         let path = UIBezierPath()
         path.move(to: splines[3][0])
-        path.addCurve(to: splines[3][3], controlPoint1: splines[3][1], controlPoint2: splines[3][2])
+        path.addLine(to: splines[3][1])
+        path.addQuadCurve(to: splines[3][3], controlPoint: splines[3][2])
         path.addLine(to: splines[3][4])
         path.close()
         return path
@@ -129,7 +136,7 @@ class PullDownLayer: CAShapeLayer {
         let path = UIBezierPath()
         path.move(to: splines[4][0])
         path.addLine(to: splines[4][1])
-        path.addLine(to: splines[4][2])
+        //path.addLine(to: splines[4][2])
         path.addLine(to: splines[4][3])
         path.addLine(to: splines[4][4])
         path.close()
@@ -145,10 +152,10 @@ class PullDownLayer: CAShapeLayer {
         let path5 = getFifthPath().cgPath
         
         //  Animation Durations
-        let d1 = 0.3
-        let d2 = 0.3
-        let d3 = 0.3
-        let d4 = 0.4
+        let d1 = 1.3
+        let d2 = 1.3
+        let d3 = 1.3
+        let d4 = 1.3
         
         let startAnimation : CABasicAnimation = CABasicAnimation(keyPath: "path")
         startAnimation.fromValue = path1

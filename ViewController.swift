@@ -13,6 +13,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     let tableView = UITableView()
     var cellHeight: CGFloat = 66;
     var numTableRows: CGFloat = 3;
+    var holderView = UIView()
     
     @IBAction func button(_ sender: UIButton) {
         if sender.isSelected {
@@ -28,7 +29,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+        //setupTableView()
+        
+        pullDownAnimation()
         
         self.view.isUserInteractionEnabled = true
         self.tableView.isUserInteractionEnabled = true
@@ -74,6 +77,22 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             print("This is the unselected frame origin\(self.tableView.frame.origin)")
             self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: -self.tableView.frame.height)
         }*/
+    }
+    
+    func pullDownAnimation(){
+        let tableSize = CGSize(width: self.view.frame.width, height: self.cellHeight*self.numTableRows)
+        holderView = UIView(frame: CGRect(origin: CGPoint(x: 0.0, y: 20.0), size: tableSize))
+        holderView.backgroundColor = UIColor.blue
+        self.view.addSubview(holderView)
+        let pullDownLayer = PullDownLayer(frame: CGRect(origin: CGPoint(x: 0.0, y: 20.0), size: tableSize))
+        holderView.layer.addSublayer(pullDownLayer)
+        pullDownLayer.animate()
+        Timer.scheduledTimer(timeInterval: 5.2, target: self, selector: #selector(self.pullDownAnimationEnd), userInfo: nil, repeats: false)
+    }
+    
+    func pullDownAnimationEnd(){
+        holderView.layer.removeAllAnimations()
+        pullDownAnimation()
     }
     
     func setupTableView(){
