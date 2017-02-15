@@ -1,18 +1,18 @@
 //
-//  DCTableViewCell.swift
+//  DCAlarmTableViewCell.swift
 //  CustomTableViewTest
 //
-//  Created by Connor Reid on 10/2/17.
+//  Created by Connor Reid on 11/2/17.
 //  Copyright © 2017 Connor Reid. All rights reserved.
 //
 
 import UIKit
 
-class DCTableViewCell: UITableViewCell {
+class DCAlarmTableViewCell: UITableViewCell {
     
-    let colourSwatchArray = [Colours.aqua, Colours.blue, Colours.clear, Colours.mustard, Colours.orange, Colours.purple, Colours.red, Colours.white]
-    
-    @IBOutlet weak var alarmTime: UILabel!
+    let colourSwatchArray = [Colours.aqua, Colours.blue, Colours.mustard, Colours.orange, Colours.purple, Colours.red]
+
+    @IBOutlet weak var alarmLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,13 +30,13 @@ class DCTableViewCell: UITableViewCell {
     }
     
     func setAlarmLabel(time: String, font: UIFont){
-        self.alarmTime.text = time
-        self.alarmTime.font = font
+        self.alarmLabel.text = time
+        self.alarmLabel.font = font
     }
     
     //  Sets the background colour to a specified DC Colour
     func setDCColour(index: Int){
         self.backgroundColor = colourSwatchArray[index % colourSwatchArray.count]
     }
-
+    
 }

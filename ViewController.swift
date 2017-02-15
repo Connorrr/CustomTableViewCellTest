@@ -10,11 +10,34 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    @IBOutlet weak var tableView: UITableView!
+    let tableView = UITableView()
+    var cellHeight: CGFloat = 66;
+    var numTableRows: CGFloat = 3;
+    
+    @IBAction func button(_ sender: UIButton) {
+        if sender.isSelected {
+            print("This is the selected frame origin\(self.tableView.frame.origin)")
+            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: self.tableView.frame.height)
+            sender.isSelected = false
+        }else{
+            print("This is the unselected frame origin\(self.tableView.frame.origin)")
+            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: -self.tableView.frame.height)
+            sender.isSelected = true
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupTableView()
+        
+        self.view.isUserInteractionEnabled = true
+        self.tableView.isUserInteractionEnabled = true
+        
+        let panTableView = UIPanGestureRecognizer(target: self, action: #selector(self.panUPDownTable(sender:)))
+        self.tableView.addGestureRecognizer(panTableView)
+        self.view.addGestureRecognizer(panTableView)
+        
+        print(self.tableView.frame.origin)
         // Do any additional setup after loading the view.
     }
 
@@ -28,13 +51,40 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DCTableViewCell
-        
-        
-        
+        let cell = Bundle.main.loadNibNamed("DCAlarmTableViewCell", owner: self, options: nil)?.first as! DCAlarmTableViewCell
+        //print("What dis index eh \(indexPath.row)")
+        cell.setDCColour(index: indexPath.row)
+        cell.setAlarmLabel(time: "10:23:52")
+        self.cellHeight = cell.frame.height
         return cell
     }
     
+    func panUPDownTable(sender: UIPanGestureRecognizer){
+        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+            
+            let translation = sender.translation(in: self.tableView)
+            print(translation)
+            
+        }
+        print("Oi looks like we gotta swipe dis: \(sender.direction)")
+        if sender.direction == .up {
+            print("This is the selected frame origin\(self.tableView.frame.origin)")
+            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: self.tableView.frame.height)
+        }else if (sender.direction == .down){
+            print("This is the unselected frame origin\(self.tableView.frame.origin)")
+            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: -self.tableView.frame.height)
+        }
+    }
+    
+    func setupTableView(){
+        self.tableView.separatorStyle = .none
+        let tableSize = CGSize(width: self.view.frame.width, height: self.cellHeight*self.numTableRows)
+        self.tableView.isScrollEnabled = false
+        tableView.frame = CGRect(origin: CGPoint(x: 0.0, y: 20.0), size: tableSize)
+        tableView.delegate = self
+        tableView.dataSource = self
+        self.view.addSubview(tableView)
+    }
 
     /*
     // MARK: - Navigation
