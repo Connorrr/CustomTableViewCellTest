@@ -33,7 +33,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.view.isUserInteractionEnabled = true
         self.tableView.isUserInteractionEnabled = true
         
-        let panTableView = UIPanGestureRecognizer(target: self, action: #selector(self.panUPDownTable(sender:)))
+        let panTableView = UIPanGestureRecognizer(target: self, action: #selector(self.panUPDownTable(gestureRecognizer:)))
         self.tableView.addGestureRecognizer(panTableView)
         self.view.addGestureRecognizer(panTableView)
         
@@ -59,21 +59,21 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell
     }
     
-    func panUPDownTable(sender: UIPanGestureRecognizer){
+    func panUPDownTable(gestureRecognizer: UIPanGestureRecognizer){
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
             
-            let translation = sender.translation(in: self.tableView)
+            let translation = gestureRecognizer.translation(in: self.tableView)
             print(translation)
             
         }
-        print("Oi looks like we gotta swipe dis: \(sender.direction)")
-        if sender.direction == .up {
+        /*print("Oi looks like we gotta swipe dis: \(sender.direction)")
+        if gestureRecognizer.direction == .up {
             print("This is the selected frame origin\(self.tableView.frame.origin)")
             self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: self.tableView.frame.height)
-        }else if (sender.direction == .down){
+        }else if (gestureRecognizer.direction == .down){
             print("This is the unselected frame origin\(self.tableView.frame.origin)")
             self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: -self.tableView.frame.height)
-        }
+        }*/
     }
     
     func setupTableView(){
