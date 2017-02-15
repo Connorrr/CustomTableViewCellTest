@@ -14,6 +14,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     var cellHeight: CGFloat = 66;
     var numTableRows: CGFloat = 3;
     var holderView = UIView()
+    var pullDownLayer = PullDownLayer(frame: CGRect.zero)
+    var isAnimating = false
     
     @IBAction func button(_ sender: UIButton) {
         if sender.isSelected {
@@ -29,9 +31,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //setupTableView()
-        
-        pullDownAnimation()
+        setupHolderAndLayer()
         
         self.view.isUserInteractionEnabled = true
         self.tableView.isUserInteractionEnabled = true
@@ -62,37 +62,59 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell
     }
     
+    
     func panUPDownTable(gestureRecognizer: UIPanGestureRecognizer){
-        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
-            
-            let translation = gestureRecognizer.translation(in: self.tableView)
-            print(translation)
-            
+        if (!isAnimating){
+            if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+                let translation = gestureRecognizer.translation(in: self.tableView)
+                //  Start Pull Down
+                if (translation.y < 180 && translation.y > 0){
+                    stretchCeiling(stretch: translation.y)
+                }else if(translation.y >= 180){     //  Strat animation
+                    pullDownAnimation()
+                }
+            }
+            if (gestureRecognizer.state == .ended){
+                stretchCeiling(stretch: CGFloat(0))
+            }
         }
-        /*print("Oi looks like we gotta swipe dis: \(sender.direction)")
-        if gestureRecognizer.direction == .up {
-            print("This is the selected frame origin\(self.tableView.frame.origin)")
-            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: self.tableView.frame.height)
-        }else if (gestureRecognizer.direction == .down){
-            print("This is the unselected frame origin\(self.tableView.frame.origin)")
-            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: -self.tableView.frame.height)
-        }*/
     }
     
-    func pullDownAnimation(){
+    /*
+     Takes the y value from a Pan gesture translation and stretches the ceiling 
+     shape layer accordingly
+     */
+    func stretchCeiling(stretch: CGFloat){
+        //print("I looked everywhere and this is the only stretch value I could find... \(stretch)\nplease dont hit me like last time.")
+        pullDownLayer.path = pullDownLayer.getStretchPath(multiplier: stretch / CGFloat(180)).cgPath
+    }
+    
+    /*
+     Initializes the holderview and its sublayer
+     */
+    func setupHolderAndLayer(){
         let tableSize = CGSize(width: self.view.frame.width, height: self.cellHeight*self.numTableRows)
         holderView = UIView(frame: CGRect(origin: CGPoint(x: 0.0, y: 20.0), size: tableSize))
-        holderView.backgroundColor = UIColor.blue
+        holderView.backgroundColor = UIColor.clear
         self.view.addSubview(holderView)
-        let pullDownLayer = PullDownLayer(frame: CGRect(origin: CGPoint(x: 0.0, y: 20.0), size: tableSize))
+        pullDownLayer = PullDownLayer(frame: CGRect(origin: CGPoint(x: 0.0, y: 20.0), size: tableSize))
         holderView.layer.addSublayer(pullDownLayer)
+    }
+    
+    /*
+     Animates the pulldown view.  Must run setupHolderAndLayer() before.
+     */
+    func pullDownAnimation(){
+        isAnimating = true
         pullDownLayer.animate()
-        Timer.scheduledTimer(timeInterval: 5.2, target: self, selector: #selector(self.pullDownAnimationEnd), userInfo: nil, repeats: false)
+        Timer.scheduledTimer(timeInterval: pullDownLayer.animationDuration, target: self, selector: #selector(self.pullDownAnimationEnd), userInfo: nil, repeats: false)
     }
     
     func pullDownAnimationEnd(){
+        isAnimating = false
         holderView.layer.removeAllAnimations()
-        pullDownAnimation()
+        pullDownLayer.removeFromSuperlayer()
+        setupHolderAndLayer()
     }
     
     func setupTableView(){
