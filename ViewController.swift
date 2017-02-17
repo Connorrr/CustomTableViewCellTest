@@ -112,7 +112,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 }
             }
             if gestureRecognizer.state == .ended {
-                pullDownTableViewAnimation()
+                pullDownTableViewAnimationNoBounce()
             }
         }
     }
@@ -147,7 +147,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     /// "Disolves" the mask before animation end
     func pullDownAnimationAlmostEnd(){
-        self.pullDownLayer.dissolveLayerWithAnimation(duration: pullDownLayer.timeUntilTableIsCovered)
+        //self.pullDownLayer.dissolveLayerWithAnimation(duration: pullDownLayer.timeUntilTableIsCovered)
         //self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: self.tableView.frame.height)  //  Move the table down
     }
     
@@ -162,20 +162,32 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     /// While the other pull down animtaions focus on the PullDownLayer, this ones is for the Table
     func pullDownTableViewAnimation(){
+        let tableHeight = tableView.frame.height
         self.view.bringSubview(toFront: holderView)
-        UIView.animate(withDuration: pullDownLayer.timeUntilTableIsCovered, delay: 0.0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: pullDownLayer.d1, delay: 0.0, options: .curveLinear, animations: {
+            self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - tableHeight*3/4)
+        }, completion: nil)
+        UIView.animate(withDuration: pullDownLayer.d2, delay: pullDownLayer.d1, options: .curveLinear, animations: {
+            self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - tableHeight/2)
+        }, completion: nil)
+        UIView.animate(withDuration:  pullDownLayer.d3, delay: pullDownLayer.d1 + pullDownLayer.d2, options: .curveLinear, animations: {
             self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0)
-        }, completion: { finished in
-            UIView.animate(withDuration: self.pullDownLayer.d3, delay: 0.0, options: .curveEaseInOut, animations: {
-                self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - self.pullDownLayer.bounceHeight)
-            }, completion: { finished in
-                UIView.animate(withDuration: self.pullDownLayer.d4, delay: 0.0, options: .curveEaseInOut, animations: {
-                    self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0)
-                }, completion: { finished in
-                    
-                })
-            })
-        })
+        }, completion: nil)
+
+        UIView.animate(withDuration: pullDownLayer.d5, delay: pullDownLayer.d1 + pullDownLayer.d2 + pullDownLayer.d3 + pullDownLayer.d4, options: .curveLinear, animations: {
+            self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - tableHeight/8)
+        }, completion: nil)
+        UIView.animate(withDuration: pullDownLayer.d6, delay: pullDownLayer.d1 + pullDownLayer.d2 + pullDownLayer.d3 + pullDownLayer.d4 + pullDownLayer.d5, options: .curveLinear, animations: {
+            self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0)
+        }, completion: nil)
+    }
+    
+    
+    /// Just the first part of the pullDownTableViewAnimation animation
+    func pullDownTableViewAnimationNoBounce(){
+        UIView.animate(withDuration: pullDownLayer.timeUntilTableIsCovered, delay: 0.0, options: .curveLinear, animations: {
+            self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0)
+        }, completion:nil)
     }
     
     /// Starts the table being pushed back up

@@ -15,10 +15,12 @@ class PullDownLayer: CAShapeLayer {
     private var width: CGFloat
     
     //  Animation Durations
-    private var d1: CFTimeInterval = 0.08
-    private var d2: CFTimeInterval = 0.05
+    var d1: CFTimeInterval = 0.08
+    var d2: CFTimeInterval = 0.05
     var d3: CFTimeInterval = 0.04
     var d4: CFTimeInterval = 0.04
+    var d5: CFTimeInterval = 0.04
+    var d6: CFTimeInterval = 0.04
     
     var animationDuration: CFTimeInterval
     var timeUntilTableIsCovered: CFTimeInterval
@@ -83,44 +85,64 @@ class PullDownLayer: CAShapeLayer {
         splines.append(second)
         
         //  Third points
-        firstPoint = CGPoint(x: 0.0, y: 0.0)
-        secondPoint = CGPoint(x: 0.0, y: height)
-        thirdPoint = CGPoint(x: width/2, y: height*5/8)
-        fourthPoint = CGPoint(x: width, y: height)
-        fifthPoint = CGPoint(x: width, y: 0.0)
+        firstPoint = CGPoint(x: 0.0, y: height/4)
+        secondPoint = CGPoint(x: 0.0, y: height/2)
+        thirdPoint = CGPoint(x: width/2, y: height/2)
+        fourthPoint = CGPoint(x: width, y: height/2)
+        fifthPoint = CGPoint(x: width, y: height/4)
         
         let third = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
         splines.append(third)
         
         //  Fourth points
-        firstPoint = CGPoint(x: 0.0, y: 0.0)
-        secondPoint = CGPoint(x: 0.0, y: height)
-        thirdPoint = CGPoint(x: width/2, y: height*19/16)
-        fourthPoint = CGPoint(x: width, y: height)
-        fifthPoint = CGPoint(x: width, y: 0.0)
+        firstPoint = CGPoint(x: 0.0, y: height/2)
+        secondPoint = CGPoint(x: 0.0, y: height*3/4)
+        thirdPoint = CGPoint(x: width/2, y: height/2)
+        fourthPoint = CGPoint(x: width, y: height*3/4)
+        fifthPoint = CGPoint(x: width, y: height/2)
         
         let fourth = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
         splines.append(fourth)
         
         //  Fifth points
-        firstPoint = CGPoint(x: 0.0, y: 0.0)
+        firstPoint = CGPoint(x: 0.0, y: height)
         secondPoint = CGPoint(x: 0.0, y: height)
-        thirdPoint = CGPoint(x: width/2, y: height*29/32)
+        thirdPoint = CGPoint(x: width/2, y: height)
         fourthPoint = CGPoint(x: width, y: height)
-        fifthPoint = CGPoint(x: width, y: 0.0)
+        fifthPoint = CGPoint(x: width, y: height)
         
         let fifth = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
         splines.append(fifth)
         
         //  Sixth points
-        firstPoint = CGPoint(x: 0.0, y: 0.0)
+        firstPoint = CGPoint(x: 0.0, y: height)
         secondPoint = CGPoint(x: 0.0, y: height)
-        thirdPoint = CGPoint(x: width/2, y: height)
+        thirdPoint = CGPoint(x: width/2, y: height*5/4)
         fourthPoint = CGPoint(x: width, y: height)
-        fifthPoint = CGPoint(x: width, y: 0.0)
+        fifthPoint = CGPoint(x: width, y: height)
         
         let sixth = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
         splines.append(sixth)
+        
+        //  Seventh points
+        firstPoint = CGPoint(x: 0.0, y: height*7/8)
+        secondPoint = CGPoint(x: 0.0, y: height)
+        thirdPoint = CGPoint(x: width/2, y: height*7/8)
+        fourthPoint = CGPoint(x: width, y: height)
+        fifthPoint = CGPoint(x: width, y: height*7/8)
+        
+        let seventh = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
+        splines.append(seventh)
+        
+        //  Eighth points
+        firstPoint = CGPoint(x: 0.0, y: height)
+        secondPoint = CGPoint(x: 0.0, y: height)
+        thirdPoint = CGPoint(x: width/2, y: height)
+        fourthPoint = CGPoint(x: width, y: height)
+        fifthPoint = CGPoint(x: width, y: height)
+        
+        let eighth = [firstPoint, secondPoint, thirdPoint, fourthPoint, fifthPoint]
+        splines.append(eighth)
         
     }
     
@@ -185,8 +207,30 @@ class PullDownLayer: CAShapeLayer {
         let path = UIBezierPath()
         path.move(to: splines[5][0])
         path.addLine(to: splines[5][1])
-        path.addLine(to: splines[5][3])
+        path.addQuadCurve(to: splines[5][3], controlPoint: splines[5][2])
         path.addLine(to: splines[5][4])
+        path.close()
+        return path
+    }
+    
+    //  Shape 7 Bezier Path
+    private func getSeventhPath() -> UIBezierPath {
+        let path = UIBezierPath()
+        path.move(to: splines[6][0])
+        path.addLine(to: splines[6][1])
+        path.addQuadCurve(to: splines[6][3], controlPoint: splines[6][2])
+        path.addLine(to: splines[6][4])
+        path.close()
+        return path
+    }
+    
+    //  Shape 8 Bezier Path
+    private func getEighthPath() -> UIBezierPath {
+        let path = UIBezierPath()
+        path.move(to: splines[7][0])
+        path.addLine(to: splines[7][1])
+        path.addQuadCurve(to: splines[7][3], controlPoint: splines[7][2])
+        path.addLine(to: splines[7][4])
         path.close()
         return path
     }
@@ -228,6 +272,8 @@ class PullDownLayer: CAShapeLayer {
         let path4 = getFourthPath().cgPath
         let path5 = getFifthPath().cgPath
         let path6 = getSixthPath().cgPath
+        let path7 = getSeventhPath().cgPath
+        let path8 = getEighthPath().cgPath
         
         let startAnimation : CABasicAnimation = CABasicAnimation(keyPath: "path")
         startAnimation.fromValue = path2
@@ -253,9 +299,21 @@ class PullDownLayer: CAShapeLayer {
         fourthAnimation.beginTime = thirdAnimation.beginTime + thirdAnimation.duration
         fourthAnimation.duration = d4
         
+        let fifthAnimation : CABasicAnimation = CABasicAnimation(keyPath: "path")
+        fifthAnimation.fromValue = path5
+        fifthAnimation.toValue = path6
+        fifthAnimation.beginTime = fourthAnimation.beginTime + fourthAnimation.duration
+        fifthAnimation.duration = d5
+        
+        let sixthAnimation : CABasicAnimation = CABasicAnimation(keyPath: "path")
+        sixthAnimation.fromValue = path5
+        sixthAnimation.toValue = path6
+        sixthAnimation.beginTime = fifthAnimation.beginTime + fifthAnimation.duration
+        sixthAnimation.duration = d6
+        
         let shrinkAnimationGroup : CAAnimationGroup = CAAnimationGroup()
-        shrinkAnimationGroup.animations = [startAnimation, secondAnimation, thirdAnimation, fourthAnimation]
-        shrinkAnimationGroup.duration = fourthAnimation.beginTime + fourthAnimation.duration
+        shrinkAnimationGroup.animations = [startAnimation, secondAnimation, thirdAnimation, fourthAnimation, fifthAnimation, sixthAnimation]
+        shrinkAnimationGroup.duration = sixthAnimation.beginTime + sixthAnimation.duration
         shrinkAnimationGroup.fillMode = kCAFillModeForwards
         shrinkAnimationGroup.isRemovedOnCompletion = false
         add(shrinkAnimationGroup, forKey: nil)
