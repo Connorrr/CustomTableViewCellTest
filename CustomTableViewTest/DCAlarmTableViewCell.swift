@@ -35,8 +35,9 @@ class DCAlarmTableViewCell: UITableViewCell {
     }
     
     //  Sets the background colour to a specified DC Colour
-    func setDCColour(index: Int){
+    func setDCColour(index: Int) -> UIColor{
         self.backgroundColor = colourSwatchArray[index % colourSwatchArray.count]
+        return self.backgroundColor!
     }
     
 }
