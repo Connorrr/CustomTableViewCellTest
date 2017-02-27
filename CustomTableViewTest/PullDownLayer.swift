@@ -15,12 +15,12 @@ class PullDownLayer: CAShapeLayer {
     private var width: CGFloat
     
     //  Animation Durations
-    var d1: CFTimeInterval = 0.08
-    var d2: CFTimeInterval = 0.05
+    var d1: CFTimeInterval = 0.04
+    var d2: CFTimeInterval = 0.04
     var d3: CFTimeInterval = 0.04
-    var d4: CFTimeInterval = 0.04
-    var d5: CFTimeInterval = 0.04
-    var d6: CFTimeInterval = 0.04
+    var d4: CFTimeInterval = 0.06
+    var d5: CFTimeInterval = 0.06
+    var d6: CFTimeInterval = 0.06
     
     var animationDuration: CFTimeInterval
     var timeUntilTableIsCovered: CFTimeInterval
@@ -58,7 +58,9 @@ class PullDownLayer: CAShapeLayer {
         d2 = d2 * multiplier
         d3 = d3 * multiplier
         d4 = d4 * multiplier
-        animationDuration = d1 + d2 + d3 + d4
+        d5 = d5 * multiplier
+        d6 = d6 * multiplier
+        animationDuration = d1 + d2 + d3 + d4 + d5 + d6
         timeUntilTableIsCovered = d1 + d2
     }
 
@@ -117,7 +119,7 @@ class PullDownLayer: CAShapeLayer {
         //  Sixth points
         firstPoint = CGPoint(x: 0.0, y: height)
         secondPoint = CGPoint(x: 0.0, y: height)
-        thirdPoint = CGPoint(x: width/2, y: height*5/4)
+        thirdPoint = CGPoint(x: width/2, y: height*9/8)
         fourthPoint = CGPoint(x: width, y: height)
         fifthPoint = CGPoint(x: width, y: height)
         
@@ -127,7 +129,7 @@ class PullDownLayer: CAShapeLayer {
         //  Seventh points
         firstPoint = CGPoint(x: 0.0, y: height*7/8)
         secondPoint = CGPoint(x: 0.0, y: height)
-        thirdPoint = CGPoint(x: width/2, y: height*7/8)
+        thirdPoint = CGPoint(x: width/2, y: height*15/16)
         fourthPoint = CGPoint(x: width, y: height)
         fifthPoint = CGPoint(x: width, y: height*7/8)
         
@@ -300,14 +302,14 @@ class PullDownLayer: CAShapeLayer {
         fourthAnimation.duration = d4
         
         let fifthAnimation : CABasicAnimation = CABasicAnimation(keyPath: "path")
-        fifthAnimation.fromValue = path5
-        fifthAnimation.toValue = path6
+        fifthAnimation.fromValue = path6
+        fifthAnimation.toValue = path7
         fifthAnimation.beginTime = fourthAnimation.beginTime + fourthAnimation.duration
         fifthAnimation.duration = d5
         
         let sixthAnimation : CABasicAnimation = CABasicAnimation(keyPath: "path")
-        sixthAnimation.fromValue = path5
-        sixthAnimation.toValue = path6
+        sixthAnimation.fromValue = path7
+        sixthAnimation.toValue = path8
         sixthAnimation.beginTime = fifthAnimation.beginTime + fifthAnimation.duration
         sixthAnimation.duration = d6
         

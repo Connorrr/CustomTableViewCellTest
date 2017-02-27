@@ -11,8 +11,9 @@ import UIKit
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     let tableView = UITableView()
+    let mask = UIView()
     var cellHeight: CGFloat = 66;
-    var numTableRows: CGFloat = 3;
+    var numTableRows: CGFloat = 5;
     var holderView = UIView()
     var pullDownLayer = PullDownLayer(frame: CGRect.zero)
     var pullDownLayerColour = UIColor.clear
@@ -25,6 +26,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return CGSize(width: self.view.frame.width, height: self.cellHeight*self.numTableRows)
     }
     
+    // Used for setup purposes
     var tableViewFrame: CGRect {
         var frame: CGRect
         if isPulledDown {
@@ -33,18 +35,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             frame = CGRect(origin: CGPoint(x: 0.0, y: 20.0 - tableSize.height), size: tableSize)
         }
         return frame
-    }
-    
-    @IBAction func button(_ sender: UIButton) {
-        if sender.isSelected {
-            print("This is the selected frame origin\(self.tableView.frame.origin)")
-            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: self.tableView.frame.height)
-            sender.isSelected = false
-        }else{
-            print("This is the unselected frame origin\(self.tableView.frame.origin)")
-            self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: -self.tableView.frame.height)
-            sender.isSelected = true
-        }
     }
     
     override func viewDidLoad() {
@@ -59,7 +49,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.tableView.isUserInteractionEnabled = true
         
         let panTableView = UIPanGestureRecognizer(target: self, action: #selector(self.panUPDownTable(gestureRecognizer:)))
-        self.tableView.addGestureRecognizer(panTableView)
         self.view.addGestureRecognizer(panTableView)
         
         // Do any additional setup after loading the view.
@@ -71,7 +60,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return Int(numTableRows)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -79,7 +68,22 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.pullDownLayerColour = cell.setDCColour(index: indexPath.row)
         pullDownLayer.fillColor = pullDownLayerColour.cgColor
         cell.setAlarmLabel(time: "10:23:52")
+        cell.initSwipe()
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        print("We edditing then?")
+        if editingStyle == .delete {
+            //cell.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
     }
     
     
@@ -140,15 +144,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         isAnimating = true
         pullDownLayer.animate()
         pullDownTableViewAnimation()
-        Timer.scheduledTimer(timeInterval: pullDownLayer.animationDuration, target: self, selector: #selector(self.pullDownAnimationEnd), userInfo: nil, repeats: false)
-        Timer.scheduledTimer(timeInterval: pullDownLayer.timeUntilTableIsCovered, target: self, selector: #selector(self.pullDownAnimationAlmostEnd), userInfo: nil, repeats: false)
-    }
-    
-    
-    /// "Disolves" the mask before animation end
-    func pullDownAnimationAlmostEnd(){
-        //self.pullDownLayer.dissolveLayerWithAnimation(duration: pullDownLayer.timeUntilTableIsCovered)
-        //self.tableView.frame = self.tableView.frame.offsetBy(dx: 0.0, dy: self.tableView.frame.height)  //  Move the table down
     }
     
     ///  Executed at the end of the animation
@@ -157,29 +152,46 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         isPulledDown = true
         holderView.layer.removeAllAnimations()
         pullDownLayer.removeFromSuperlayer()
+        holderView.removeFromSuperview()
         setupHolderAndLayer()
+        self.view.bringSubview(toFront: tableView)
+        tableView.becomeFirstResponder()
     }
     
     /// While the other pull down animtaions focus on the PullDownLayer, this ones is for the Table
     func pullDownTableViewAnimation(){
+        mask.backgroundColor = pullDownLayerColour
         let tableHeight = tableView.frame.height
-        self.view.bringSubview(toFront: holderView)
+        self.view.bringSubview(toFront: mask)
+        //  Dissolve the mask
+        UIView.animate(withDuration: pullDownLayer.animationDuration, delay: 0.0, options: .curveEaseIn, animations: {
+            self.mask.backgroundColor = UIColor.clear
+        }, completion: nil)
+
+        //  Run the pull down animation
         UIView.animate(withDuration: pullDownLayer.d1, delay: 0.0, options: .curveLinear, animations: {
             self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - tableHeight*3/4)
+            self.mask.frame.origin = self.tableView.frame.origin
         }, completion: nil)
         UIView.animate(withDuration: pullDownLayer.d2, delay: pullDownLayer.d1, options: .curveLinear, animations: {
             self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - tableHeight/2)
+            self.mask.frame.origin = self.tableView.frame.origin
         }, completion: nil)
         UIView.animate(withDuration:  pullDownLayer.d3, delay: pullDownLayer.d1 + pullDownLayer.d2, options: .curveLinear, animations: {
             self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0)
+            self.mask.frame.origin = self.tableView.frame.origin
         }, completion: nil)
 
         UIView.animate(withDuration: pullDownLayer.d5, delay: pullDownLayer.d1 + pullDownLayer.d2 + pullDownLayer.d3 + pullDownLayer.d4, options: .curveLinear, animations: {
-            self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - tableHeight/8)
+            self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0 - tableHeight/16)
+            self.mask.frame.origin = self.tableView.frame.origin
         }, completion: nil)
         UIView.animate(withDuration: pullDownLayer.d6, delay: pullDownLayer.d1 + pullDownLayer.d2 + pullDownLayer.d3 + pullDownLayer.d4 + pullDownLayer.d5, options: .curveLinear, animations: {
             self.tableView.frame.origin = CGPoint(x: self.tableView.frame.origin.x, y: 20.0)
-        }, completion: nil)
+            self.mask.frame.origin = self.tableView.frame.origin
+        }, completion: {finished in
+            self.pullDownAnimationEnd()
+        })
     }
     
     
@@ -195,6 +207,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     /// - Parameter yPosChange: The y transition value taken from the Pan Gesture
     func manualPushUpTable(yPosChange: CGFloat){
         self.tableView.frame.origin = CGPoint(x: tableView.frame.origin.x, y: 20.0 + yPosChange)
+        self.mask.frame.origin = self.tableView.frame.origin
     }
     
     
@@ -203,6 +216,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         isAnimating = true
         UIView.animate(withDuration: 0.1, animations: {
             self.tableView.frame.origin = CGPoint(x: 0.0, y: 20.0 - self.tableSize.height)
+            self.mask.frame.origin = self.tableView.frame.origin
         }, completion: {finished in
             self.isAnimating = false
             self.isPulledDown = false
@@ -211,11 +225,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func setupTableView(){
         self.tableView.separatorStyle = .none
+        self.tableView.allowsMultipleSelectionDuringEditing = true
         self.tableView.isScrollEnabled = false
         tableView.frame = self.tableViewFrame
         tableView.delegate = self
         tableView.dataSource = self
         self.view.addSubview(tableView)
+        mask.frame = tableView.frame
+        self.view.addSubview(mask)
     }
 
 }
