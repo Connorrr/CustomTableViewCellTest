@@ -136,7 +136,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         pullDownLayer.fillColor = pullDownLayerColour.cgColor
         pullDownLayer.backgroundColor = pullDownLayerColour.cgColor
         holderView.layer.addSublayer(pullDownLayer)
-    }
+    }//
     
     
     /// Animates the pulldown view.  Must run setupHolderAndLayer() before.
