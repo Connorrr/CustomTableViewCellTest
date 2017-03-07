@@ -8,12 +8,22 @@
 
 import UIKit
 
+protocol DCAlarmTableViewDelegate: class {
+    func animateAlarmCellShoulder(yPos: CGFloat, xTranslation: CGFloat, index: Int, cellWidth: CGFloat, cellHeight: CGFloat)
+}
+
 class DCAlarmTableViewCell: UITableViewCell {
+    
+    weak var delegate: DCAlarmTableViewDelegate?
+    
+    var cellIndex: Int?
     
     let colourSwatchArray = [Colours.aqua, Colours.blue, Colours.mustard, Colours.orange, Colours.purple, Colours.red]
     
     let leftShoulder: UIView = UIView(frame: CGRect.zero)
     let rightShoulder: UIView = UIView(frame: CGRect.zero)
+    
+    private var restingFrame: CGRect = CGRect.zero
 
     @IBOutlet weak var alarmLabel: UILabel!
     
@@ -52,15 +62,25 @@ class DCAlarmTableViewCell: UITableViewCell {
     /// Sets a swipe gesture recognizer up on the cell
     func initSwipe(){
         let swipeCell = UIPanGestureRecognizer(target: self, action: #selector(self.swipeCellLeft(gestureRecognizer:)))
+        self.restingFrame = self.frame
+        self.rightShoulder.backgroundColor = Colours.blue
+        self.leftShoulder.backgroundColor = Colours.red
+        self.addSubview(self.rightShoulder)
+        self.addSubview(self.leftShoulder)
         self.addGestureRecognizer(swipeCell)
     }
     
     @objc private func swipeCellLeft(gestureRecognizer: UIPanGestureRecognizer){
+        //  Moves the main view in one direction and lets another take its place
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
             let translation = gestureRecognizer.translation(in: self)
-            //  Start Pull Down
-            print(translation.x)
-            self.frame = CGRect(origin: CGPoint(x: translation.x, y: self.frame.origin.y), size: self.frame.size)
+            self.frame.origin.x = translation.x   //  THIS PART WORKS
+            //let newOrigin = CGPoint(x: self.frame.width + translation.x, y: self.frame.origin.y)
+            //self.rightShoulder.frame = CGRect(origin: newOrigin, size: CGSize(width: fabs(translation.x), height: frame.height))
+            if ((cellIndex) != nil) {
+                delegate?.animateAlarmCellShoulder(yPos: self.frame.origin.y, xTranslation: translation.x, index: cellIndex!, cellWidth: self.frame.width, cellHeight: self.frame.height)
+            }
+
         }
     }
     

@@ -16,6 +16,7 @@
 		BF71840D1E4E949C006F5B0D /* DCAlarmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71840B1E4E949C006F5B0D /* DCAlarmTableViewCell.swift */; };
 		BF71840E1E4E949C006F5B0D /* DCAlarmTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF71840C1E4E949C006F5B0D /* DCAlarmTableViewCell.xib */; };
 		BFA896331E53CE55006EE2AA /* PullDownLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA896321E53CE55006EE2AA /* PullDownLayer.swift */; };
+		BFA896351E693E5F006EE2AA /* DCAlarmTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA896341E693E5F006EE2AA /* DCAlarmTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		BF71840B1E4E949C006F5B0D /* DCAlarmTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DCAlarmTableViewCell.swift; sourceTree = "<group>"; };
 		BF71840C1E4E949C006F5B0D /* DCAlarmTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DCAlarmTableViewCell.xib; sourceTree = "<group>"; };
 		BFA896321E53CE55006EE2AA /* PullDownLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PullDownLayer.swift; sourceTree = "<group>"; };
+		BFA896341E693E5F006EE2AA /* DCAlarmTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DCAlarmTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				BF5287961E4D4DA600B77400 /* AppDelegate.swift */,
 				BF5287AA1E4D705500B77400 /* ViewController.swift */,
 				BFA896321E53CE55006EE2AA /* PullDownLayer.swift */,
+				BFA896341E693E5F006EE2AA /* DCAlarmTableView.swift */,
 				BF52879A1E4D4DA600B77400 /* Main.storyboard */,
 				BF71840B1E4E949C006F5B0D /* DCAlarmTableViewCell.swift */,
 				BF71840C1E4E949C006F5B0D /* DCAlarmTableViewCell.xib */,
@@ -152,6 +155,7 @@
 			files = (
 				BFA896331E53CE55006EE2AA /* PullDownLayer.swift in Sources */,
 				BF71840D1E4E949C006F5B0D /* DCAlarmTableViewCell.swift in Sources */,
+				BFA896351E693E5F006EE2AA /* DCAlarmTableView.swift in Sources */,
 				BF5287AB1E4D705500B77400 /* ViewController.swift in Sources */,
 				BF5287971E4D4DA600B77400 /* AppDelegate.swift in Sources */,
 				BF5287AF1E4D81B700B77400 /* Colours.swift in Sources */,

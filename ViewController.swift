@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    let tableView = UITableView()
+    let tableView = DCAlarmTableView()
     let mask = UIView()
     var cellHeight: CGFloat = 66;
     var numTableRows: CGFloat = 5;
@@ -45,8 +45,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         setupTableView()
         setupHolderAndLayer()
         
-        self.view.isUserInteractionEnabled = true
-        self.tableView.isUserInteractionEnabled = true
+        //self.view.isUserInteractionEnabled = true
+        //self.tableView.isUserInteractionEnabled = true
         
         let panTableView = UIPanGestureRecognizer(target: self, action: #selector(self.panUPDownTable(gestureRecognizer:)))
         self.view.addGestureRecognizer(panTableView)
@@ -69,6 +69,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         pullDownLayer.fillColor = pullDownLayerColour.cgColor
         cell.setAlarmLabel(time: "10:23:52")
         cell.initSwipe()
+        cell.cellIndex = indexPath.row
+        cell.delegate = tableView as! DCAlarmTableView
         return cell
     }
     
@@ -231,6 +233,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.delegate = self
         tableView.dataSource = self
         self.view.addSubview(tableView)
+        tableView.initShoulderVews(numOfRows: Int(numTableRows))
         mask.frame = tableView.frame
         self.view.addSubview(mask)
     }

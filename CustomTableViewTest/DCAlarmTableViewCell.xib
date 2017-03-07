@@ -31,6 +31,9 @@
                     <constraint firstItem="kvU-ac-Vbw" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="cac-pn-iQI"/>
                 </constraints>
             </tableViewCellContentView>
+            <accessibility key="accessibilityConfiguration">
+                <accessibilityTraits key="traits" notEnabled="YES"/>
+            </accessibility>
             <connections>
                 <outlet property="alarmLabel" destination="kvU-ac-Vbw" id="6Rs-Nt-MmR"/>
             </connections>
