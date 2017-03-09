@@ -40,6 +40,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = Colours.aqua.withAlphaComponent(0.7)
+        
         self.tableView.rowHeight = self.cellHeight
         
         setupTableView()

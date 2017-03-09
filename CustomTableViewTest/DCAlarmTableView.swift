@@ -10,39 +10,94 @@ import UIKit
 
 class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
     
+    var multiplier : CGFloat = 0.0
+    
     var shoulderViews : [[UIView]] = []
-
-    func animateAlarmCellShoulder(yPos: CGFloat, xTranslation: CGFloat, index: Int, cellWidth: CGFloat, cellHeight: CGFloat){
-        
-        print("ShoulderViewsCount: \(shoulderViews.count)")
-        
-        if xTranslation < 0 {
-            shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: xTranslation + cellWidth, y: yPos), size: CGSize(width: fabs(xTranslation), height: cellHeight))
-        }else if xTranslation > 0 {
-            shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: yPos), size: CGSize(width: fabs(xTranslation), height: cellHeight))
-        }else {
-            shoulderViews[index][0].frame = CGRect.zero
-            shoulderViews[index][1].frame = CGRect.zero
-        }
-    }
+    var shoulderLayers : [[TableCellShoulderLayer]] = []
+    
+    var pullLayer : TableCellShoulderLayer? = nil
     
     /// Initializes a left and right shoulderview for each row in the table
     ///
     /// - Parameter numOfRows: number of rows in the table
     func initShoulderVews(numOfRows: Int){
-        print("Num of View Array Rows: \(shoulderViews.count)")
-        print("numOfRows: \(numOfRows)")
-
+        self.backgroundColor = UIColor.clear
+        
         for i in 0..<numOfRows{
             let leftShoulder = UIView()
             let rightShoulder = UIView()
-            leftShoulder.backgroundColor = Colours.blue
-            rightShoulder.backgroundColor = Colours.red
+            let leftShoulderLayer : TableCellShoulderLayer
+            let rightShoulderLayer : TableCellShoulderLayer
+            leftShoulder.backgroundColor = UIColor.clear
+            rightShoulder.backgroundColor = UIColor.clear
             shoulderViews.append([leftShoulder, rightShoulder])
+            leftShoulderLayer = TableCellShoulderLayer(parentView: shoulderViews[i][0])
+            rightShoulderLayer = TableCellShoulderLayer(parentView: shoulderViews[i][1])
+            shoulderLayers.append([leftShoulderLayer, rightShoulderLayer])
+            shoulderViews[i][0].layer.addSublayer(shoulderLayers[i][0])
+            shoulderViews[i][1].layer.addSublayer(shoulderLayers[i][1])
             self.addSubview(shoulderViews[i][0])
             self.addSubview(shoulderViews[i][1])
         }
-        print("Num of View Array Rows: \(shoulderViews.count)")
+    }
+
+    
+    /// Delegate function:  Stretches the shoulder views with when with the horizontal xTranslation value
+    ///
+    /// - Parameters:
+    ///   - yPos: Origin Y position for the shoulder view
+    ///   - xTranslation: Translation.x value from the pan geesture
+    ///   - index: The cell index in the table view (row number starting from 0)
+    ///   - cellWidth: Width of the TableViewCell
+    ///   - cellHeight: Height of the TableViewCell
+    func animateAlarmCellShoulder(yPos: CGFloat, xTranslation: CGFloat, index: Int, cellWidth: CGFloat, cellHeight: CGFloat){
+        
+        let maxShoulderSize = cellWidth/4
+        if fabs(xTranslation) > maxShoulderSize {
+            multiplier = 1.0
+        }else{
+            multiplier = fabs(xTranslation)/maxShoulderSize
+        }
+        if xTranslation < 0 {
+            shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: xTranslation + cellWidth, y: yPos), size: CGSize(width: fabs(xTranslation), height: cellHeight))
+            shoulderLayers[index][1].path = shoulderLayers[index][1].getStretchPath(parentFrame: shoulderViews[index][1].frame, multiplier: multiplier).cgPath
+        }else if xTranslation > 0 {
+            shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: yPos), size: CGSize(width: fabs(xTranslation), height: cellHeight))
+            shoulderLayers[index][0].path = shoulderLayers[index][0].getStretchPath(parentFrame: shoulderViews[index][0].frame, multiplier: multiplier).cgPath
+        }else {
+            shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: yPos), size: CGSize(width: 0.0, height: cellHeight))
+            shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: cellWidth, y: yPos), size: CGSize(width: 0.0, height: cellHeight))
+            shoulderLayers[index][0].path = shoulderLayers[index][0].getStretchPath(parentFrame: shoulderViews[index][0].frame, multiplier: multiplier).cgPath
+            shoulderLayers[index][1].path = shoulderLayers[index][1].getStretchPath(parentFrame: shoulderViews[index][1].frame, multiplier: multiplier).cgPath
+        }
+    }
+    
+    /// Controls the animation to return the alarm table cell to center
+    ///
+    /// - Parameter cell: The DCAlarmTableViewCell which centers the shoulder view
+    func returnToCenter(cell: DCAlarmTableViewCell){
+        if (cell.cellIndex != nil) {
+            let index = cell.cellIndex!
+            //print("Left SV Width:  \(shoulderViews[index][0].frame.width), right SV W: \(shoulderViews[index][1].frame.width)")
+            self.shoulderLayers[index][0].path = nil
+            self.shoulderLayers[index][1].path = nil
+            
+            shoulderLayers[index][0].animateSnap(parentFrame: self.shoulderViews[index][0].frame, multiplier: multiplier)
+            shoulderLayers[index][1].animateSnap(parentFrame: self.shoulderViews[index][1].frame, multiplier: multiplier)
+            UIView.animate(withDuration: Globals.shoulderSnapAnimationDuration, delay: 0.0, options: .curveLinear, animations: {
+                self.shoulderViews[index][0].frame = CGRect(x: 0, y: cell.frame.origin.y, width: 0, height: cell.frame.height)
+                self.shoulderViews[index][1].frame = CGRect(x: cell.frame.width, y: cell.frame.origin.y, width: 0, height: cell.frame.height)
+                cell.frame = CGRect(origin: CGPoint(x: 0, y: cell.frame.origin.y), size: cell.frame.size)
+            }, completion: ({finished in
+                self.multiplier = 0.0
+                self.shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: CGSize(width: 0.0, height: cell.frame.height))
+                self.shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: cell.frame.width, y: 0.0), size: CGSize(width: 0.0, height: cell.frame.height))
+                self.shoulderLayers[index][0].path = self.shoulderLayers[index][0].getStretchPath(parentFrame: self.shoulderViews[index][0].frame, multiplier: 0.0).cgPath
+                self.shoulderLayers[index][1].path = self.shoulderLayers[index][1].getStretchPath(parentFrame: self.shoulderViews[index][1].frame, multiplier: 0.0).cgPath
+            }))
+        }else{
+            print("error(DCAlarmTableView): index must be non nil for func returnToCenter to operate.")
+        }
     }
 
 }

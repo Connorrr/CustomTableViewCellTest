@@ -33,7 +33,6 @@ class PullDownLayer: CAShapeLayer {
     
     fileprivate var splines = [[CGPoint]]()
     
-    
     /// Initialize the pulldown layer with a reference frame
     ///
     /// - Parameter frame: frame should be the same as any views is will cover
@@ -53,6 +52,8 @@ class PullDownLayer: CAShapeLayer {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    /// Used to slowdown or speed up the animation
     private func addMultiplierToTimes(multiplier: CFTimeInterval){
         d1 = d1 * multiplier
         d2 = d2 * multiplier
@@ -251,7 +252,6 @@ class PullDownLayer: CAShapeLayer {
         path.close()
         return path
     }
-    
     
     /// (Animation) Makes the fillColor transition from current to clear
     ///
