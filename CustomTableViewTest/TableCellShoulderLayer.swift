@@ -11,21 +11,31 @@ import UIKit
 class TableCellShoulderLayer: CAShapeLayer {
     
     var topLeft : CGPoint
+    var topLeftShelf : CGPoint
     var topCP : CGPoint
+    var topRightShelf : CGPoint
     var topRight : CGPoint
     var bottomRight : CGPoint
+    var bottomRightShelf : CGPoint
     var bottomCP : CGPoint
+    var bottomLeftShelf : CGPoint
     var bottomLeft : CGPoint
     var parentFrame : CGRect
     
+    let shelfBuffer : CGFloat = 8       //  A shelf on the outer edges of the path
+    
     init(parentView: UIView){
         parentFrame = parentView.frame
-        topLeft = CGPoint(x: 0, y: 0)
+        topLeft = CGPoint(x: 0 - shelfBuffer, y: 0)
+        topLeftShelf = CGPoint(x: 0, y: 0)
         topCP = CGPoint(x: parentFrame.width/2, y: 0)
-        topRight = CGPoint(x: parentFrame.width, y: 0)
-        bottomRight = CGPoint(x: parentFrame.width, y: parentFrame.height)
+        topRightShelf = CGPoint(x: parentFrame.width, y: 0)
+        topRight = CGPoint(x: parentFrame.width + shelfBuffer, y: 0)
+        bottomRight = CGPoint(x: parentFrame.width + shelfBuffer, y: parentFrame.height)
+        bottomRightShelf = CGPoint(x: parentFrame.width, y: parentFrame.height)
         bottomCP = CGPoint(x: parentFrame.width/2, y: parentFrame.height)
-        bottomLeft = CGPoint(x: 0, y: parentFrame.height)
+        bottomLeftShelf = CGPoint(x: 0, y: parentFrame.height)
+        bottomLeft = CGPoint(x: 0 - shelfBuffer, y: parentFrame.height)
         super.init()
     }
     
@@ -36,12 +46,16 @@ class TableCellShoulderLayer: CAShapeLayer {
     ///  Used to update the Control Points based on the parent view frame borders
     private func setNewControlPoints(parentFrame: CGRect){
         self.parentFrame = parentFrame
-        topLeft = CGPoint(x: 0-2, y: 0)
+        topLeft = CGPoint(x: 0 - shelfBuffer, y: 0)
+        topLeftShelf = CGPoint(x: 0, y: 0)
         topCP = CGPoint(x: parentFrame.width/2, y: 0)
-        topRight = CGPoint(x: parentFrame.width+2, y: 0)
-        bottomRight = CGPoint(x: parentFrame.width+2, y: parentFrame.height)
+        topRightShelf = CGPoint(x: parentFrame.width, y: 0)
+        topRight = CGPoint(x: parentFrame.width + shelfBuffer, y: 0)
+        bottomRight = CGPoint(x: parentFrame.width + shelfBuffer, y: parentFrame.height)
+        bottomRightShelf = CGPoint(x: parentFrame.width, y: parentFrame.height)
         bottomCP = CGPoint(x: parentFrame.width/2, y: parentFrame.height)
-        bottomLeft = CGPoint(x: 0 - 2, y: parentFrame.height)
+        bottomLeftShelf = CGPoint(x: 0, y: parentFrame.height)
+        bottomLeft = CGPoint(x: 0 - shelfBuffer, y: parentFrame.height)
     }
     
     /// Takes a multiplier value to compute the control points for the shoulder layer
@@ -56,11 +70,13 @@ class TableCellShoulderLayer: CAShapeLayer {
         topCP = CGPoint(x: parentFrame.width/2, y: topCPY)
         bottomCP = CGPoint(x: parentFrame.width/2, y: botCPY)
         path.move(to: topLeft)
-        //path.addLine(to: topRight)
-        path.addQuadCurve(to: topRight, controlPoint: topCP)
+        path.addLine(to: topLeftShelf)
+        path.addQuadCurve(to: topRightShelf, controlPoint: topCP)
+        path.addLine(to: topRight)
         path.addLine(to: bottomRight)
-        //path.addLine(to: bottomLeft)
-        path.addQuadCurve(to: bottomLeft, controlPoint: bottomCP)
+        path.addLine(to: bottomRightShelf)
+        path.addQuadCurve(to: bottomLeftShelf, controlPoint: bottomCP)
+        path.addLine(to: bottomLeft)
         path.close()
         return path
     }
