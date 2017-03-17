@@ -6,8 +6,9 @@
 //  Copyright © 2017 Connor Reid. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct Globals {
-    static let shoulderSnapAnimationDuration : TimeInterval = 2.0
+    static let shoulderSnapAnimationDuration : TimeInterval = 0.1
+    static var rowColours : [UIColor] = [Colours.aqua, Colours.blue, Colours.mustard, Colours.orange, Colours.purple, Colours.red]
 }

@@ -19,8 +19,6 @@ class DCAlarmTableViewCell: UITableViewCell {
     
     var cellIndex: Int?
     
-    let colourSwatchArray = [Colours.aqua, Colours.blue, Colours.mustard, Colours.orange, Colours.purple, Colours.red]
-    
     var restingFrame: CGRect = CGRect.zero
 
     @IBOutlet weak var alarmLabel: UILabel!
@@ -52,10 +50,9 @@ class DCAlarmTableViewCell: UITableViewCell {
     
     //  Sets the background colour to a specified DC Colour
     func setDCColour(index: Int) -> UIColor{
-        backgroundColor = colourSwatchArray[index % colourSwatchArray.count].withAlphaComponent(0.7)
+        backgroundColor = Globals.rowColours[index % Globals.rowColours.count]
         return backgroundColor!
     }
-    
     
     /// Sets a swipe gesture recognizer up on the cell
     func initSwipe(){

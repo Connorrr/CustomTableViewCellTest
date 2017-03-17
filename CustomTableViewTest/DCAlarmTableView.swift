@@ -28,11 +28,13 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
             let rightShoulder = UIView()
             let leftShoulderLayer : TableCellShoulderLayer
             let rightShoulderLayer : TableCellShoulderLayer
-            leftShoulder.backgroundColor = UIColor.clear
-            rightShoulder.backgroundColor = UIColor.clear
+            leftShoulder.backgroundColor = UIColor.black
+            rightShoulder.backgroundColor = UIColor.black
             shoulderViews.append([leftShoulder, rightShoulder])
             leftShoulderLayer = TableCellShoulderLayer(parentView: shoulderViews[i][0])
             rightShoulderLayer = TableCellShoulderLayer(parentView: shoulderViews[i][1])
+            leftShoulderLayer.fillColor = Globals.rowColours[i].cgColor
+            rightShoulderLayer.fillColor = Globals.rowColours[i].cgColor
             shoulderLayers.append([leftShoulderLayer, rightShoulderLayer])
             shoulderViews[i][0].layer.addSublayer(shoulderLayers[i][0])
             shoulderViews[i][1].layer.addSublayer(shoulderLayers[i][1])
@@ -90,8 +92,8 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
                 cell.frame = CGRect(origin: CGPoint(x: 0, y: cell.frame.origin.y), size: cell.frame.size)
             }, completion: ({finished in
                 self.multiplier = 0.0
-                self.shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: CGSize(width: 0.0, height: cell.frame.height))
-                self.shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: cell.frame.width, y: 0.0), size: CGSize(width: 0.0, height: cell.frame.height))
+                self.shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: cell.frame.origin.y), size: CGSize(width: 0.0, height: cell.frame.height))
+                self.shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: cell.frame.width, y: cell.frame.origin.y), size: CGSize(width: 0.0, height: cell.frame.height))
                 self.shoulderLayers[index][0].path = self.shoulderLayers[index][0].getStretchPath(parentFrame: self.shoulderViews[index][0].frame, multiplier: 0.0).cgPath
                 self.shoulderLayers[index][1].path = self.shoulderLayers[index][1].getStretchPath(parentFrame: self.shoulderViews[index][1].frame, multiplier: 0.0).cgPath
             }))

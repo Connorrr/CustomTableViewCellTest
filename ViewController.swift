@@ -68,11 +68,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = Bundle.main.loadNibNamed("DCAlarmTableViewCell", owner: self, options: nil)?.first as! DCAlarmTableViewCell
         self.pullDownLayerColour = cell.setDCColour(index: indexPath.row)
+        Globals.rowColours.append(pullDownLayerColour)
         pullDownLayer.fillColor = pullDownLayerColour.cgColor
         cell.setAlarmLabel(time: "10:23:52")
         cell.initSwipe()
         cell.cellIndex = indexPath.row
         cell.delegate = tableView as! DCAlarmTableView
+        print("Cell row: \(indexPath.row),  Cell Section:  \(indexPath.section)")
         return cell
     }
     
@@ -235,9 +237,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.delegate = self
         tableView.dataSource = self
         self.view.addSubview(tableView)
-        tableView.initShoulderVews(numOfRows: Int(numTableRows))
         mask.frame = tableView.frame
         self.view.addSubview(mask)
+        tableView.initShoulderVews(numOfRows: Int(numTableRows))
     }
 
 }
