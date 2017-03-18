@@ -62,13 +62,34 @@ class TableCellShoulderLayer: CAShapeLayer {
     ///
     /// - parentView:  The layers parent view
     /// - Returns: path for the shoulder layer
-    func getStretchPath(parentFrame: CGRect, multiplier: CGFloat) -> UIBezierPath {
+    func getStretchPath(parentFrame: CGRect, multiplier: CGFloat, isLeftShoulder: Bool) -> UIBezierPath {
         setNewControlPoints(parentFrame: parentFrame)
         let path = UIBezierPath()
-        let topCPY = parentFrame.height * multiplier
-        let botCPY = parentFrame.height - parentFrame.height * multiplier
-        topCP = CGPoint(x: parentFrame.width/2, y: topCPY)
-        bottomCP = CGPoint(x: parentFrame.width/2, y: botCPY)
+        let topCPY = parentFrame.height * 0.75 * multiplier
+        let botCPY = parentFrame.height - parentFrame.height * 0.75 * multiplier
+        let cPX: CGFloat = 20
+        
+        if isLeftShoulder {
+            topLeftShelf.y = topCPY / 2
+            bottomLeftShelf.y = parentFrame.height - topCPY / 2
+        }else{
+            topRightShelf.y = topCPY / 2
+            bottomRightShelf.y = parentFrame.height - topCPY / 2
+        }
+        
+        if parentFrame.width < cPX * 2 {
+            topCP = CGPoint(x: parentFrame.width/2, y: topCPY)
+            bottomCP = CGPoint(x: parentFrame.width/2, y: botCPY)
+        }else{
+            if isLeftShoulder {
+                topCP = CGPoint(x: cPX, y: topCPY)
+                bottomCP = CGPoint(x: cPX, y: botCPY)
+            }else{
+                topCP = CGPoint(x: parentFrame.width-cPX, y: topCPY)
+                bottomCP = CGPoint(x: parentFrame.width-cPX, y: botCPY)
+            }
+        }
+        
         path.move(to: topLeft)
         path.addLine(to: topLeftShelf)
         path.addQuadCurve(to: topRightShelf, controlPoint: topCP)
@@ -81,12 +102,12 @@ class TableCellShoulderLayer: CAShapeLayer {
         return path
     }
     
-    func animateSnap(parentFrame: CGRect, multiplier: CGFloat){
+    func animateSnap(parentFrame: CGRect, multiplier: CGFloat, isLeftShoulder: Bool){
         
         let collapsedFrame : CGRect = CGRect(x: 0, y: parentFrame.origin.y, width: 0, height: parentFrame.height)
         
-        let currentPath = getStretchPath(parentFrame: parentFrame, multiplier: multiplier).cgPath
-        let collapsedPath = getStretchPath(parentFrame: collapsedFrame, multiplier: 0.0).cgPath
+        let currentPath = getStretchPath(parentFrame: parentFrame, multiplier: multiplier, isLeftShoulder: isLeftShoulder).cgPath
+        let collapsedPath = getStretchPath(parentFrame: collapsedFrame, multiplier: 0.0, isLeftShoulder: isLeftShoulder).cgPath
         
         let snapAnimation = CABasicAnimation(keyPath: "path")
         snapAnimation.fromValue = currentPath

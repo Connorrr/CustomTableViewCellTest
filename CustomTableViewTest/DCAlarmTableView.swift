@@ -28,8 +28,8 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
             let rightShoulder = UIView()
             let leftShoulderLayer : TableCellShoulderLayer
             let rightShoulderLayer : TableCellShoulderLayer
-            leftShoulder.backgroundColor = UIColor.black
-            rightShoulder.backgroundColor = UIColor.black
+            leftShoulder.backgroundColor = UIColor.clear
+            rightShoulder.backgroundColor = UIColor.clear
             shoulderViews.append([leftShoulder, rightShoulder])
             leftShoulderLayer = TableCellShoulderLayer(parentView: shoulderViews[i][0])
             rightShoulderLayer = TableCellShoulderLayer(parentView: shoulderViews[i][1])
@@ -62,15 +62,15 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
         }
         if xTranslation < 0 {
             shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: xTranslation + cellWidth, y: yPos), size: CGSize(width: fabs(xTranslation), height: cellHeight))
-            shoulderLayers[index][1].path = shoulderLayers[index][1].getStretchPath(parentFrame: shoulderViews[index][1].frame, multiplier: multiplier).cgPath
+            shoulderLayers[index][1].path = shoulderLayers[index][1].getStretchPath(parentFrame: shoulderViews[index][1].frame, multiplier: multiplier, isLeftShoulder: false).cgPath
         }else if xTranslation > 0 {
             shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: yPos), size: CGSize(width: fabs(xTranslation), height: cellHeight))
-            shoulderLayers[index][0].path = shoulderLayers[index][0].getStretchPath(parentFrame: shoulderViews[index][0].frame, multiplier: multiplier).cgPath
+            shoulderLayers[index][0].path = shoulderLayers[index][0].getStretchPath(parentFrame: shoulderViews[index][0].frame, multiplier: multiplier, isLeftShoulder: true).cgPath
         }else {
             shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: yPos), size: CGSize(width: 0.0, height: cellHeight))
             shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: cellWidth, y: yPos), size: CGSize(width: 0.0, height: cellHeight))
-            shoulderLayers[index][0].path = shoulderLayers[index][0].getStretchPath(parentFrame: shoulderViews[index][0].frame, multiplier: multiplier).cgPath
-            shoulderLayers[index][1].path = shoulderLayers[index][1].getStretchPath(parentFrame: shoulderViews[index][1].frame, multiplier: multiplier).cgPath
+            shoulderLayers[index][0].path = shoulderLayers[index][0].getStretchPath(parentFrame: shoulderViews[index][0].frame, multiplier: multiplier, isLeftShoulder: true).cgPath
+            shoulderLayers[index][1].path = shoulderLayers[index][1].getStretchPath(parentFrame: shoulderViews[index][1].frame, multiplier: multiplier, isLeftShoulder: false).cgPath
         }
     }
     
@@ -84,8 +84,8 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
             self.shoulderLayers[index][0].path = nil
             self.shoulderLayers[index][1].path = nil
             
-            shoulderLayers[index][0].animateSnap(parentFrame: self.shoulderViews[index][0].frame, multiplier: multiplier)
-            shoulderLayers[index][1].animateSnap(parentFrame: self.shoulderViews[index][1].frame, multiplier: multiplier)
+            shoulderLayers[index][0].animateSnap(parentFrame: self.shoulderViews[index][0].frame, multiplier: multiplier, isLeftShoulder: true)
+            shoulderLayers[index][1].animateSnap(parentFrame: self.shoulderViews[index][1].frame, multiplier: multiplier, isLeftShoulder: false)
             UIView.animate(withDuration: Globals.shoulderSnapAnimationDuration, delay: 0.0, options: .curveLinear, animations: {
                 self.shoulderViews[index][0].frame = CGRect(x: 0, y: cell.frame.origin.y, width: 0, height: cell.frame.height)
                 self.shoulderViews[index][1].frame = CGRect(x: cell.frame.width, y: cell.frame.origin.y, width: 0, height: cell.frame.height)
@@ -94,8 +94,8 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
                 self.multiplier = 0.0
                 self.shoulderViews[index][0].frame = CGRect(origin: CGPoint(x: 0.0, y: cell.frame.origin.y), size: CGSize(width: 0.0, height: cell.frame.height))
                 self.shoulderViews[index][1].frame = CGRect(origin: CGPoint(x: cell.frame.width, y: cell.frame.origin.y), size: CGSize(width: 0.0, height: cell.frame.height))
-                self.shoulderLayers[index][0].path = self.shoulderLayers[index][0].getStretchPath(parentFrame: self.shoulderViews[index][0].frame, multiplier: 0.0).cgPath
-                self.shoulderLayers[index][1].path = self.shoulderLayers[index][1].getStretchPath(parentFrame: self.shoulderViews[index][1].frame, multiplier: 0.0).cgPath
+                self.shoulderLayers[index][0].path = self.shoulderLayers[index][0].getStretchPath(parentFrame: self.shoulderViews[index][0].frame, multiplier: 0.0, isLeftShoulder: true).cgPath
+                self.shoulderLayers[index][1].path = self.shoulderLayers[index][1].getStretchPath(parentFrame: self.shoulderViews[index][1].frame, multiplier: 0.0, isLeftShoulder: false).cgPath
             }))
         }else{
             print("error(DCAlarmTableView): index must be non nil for func returnToCenter to operate.")
