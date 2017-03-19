@@ -65,9 +65,10 @@ class DCAlarmTableViewCell: UITableViewCell {
         //  Moves the main view in one direction and lets another take its place
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
             let translation = gestureRecognizer.translation(in: self)
-            self.frame.origin.x = translation.x
+            let xTranslation = translation.x / 2
+            self.frame.origin.x = xTranslation
             if ((cellIndex) != nil) {
-                delegate?.animateAlarmCellShoulder(yPos: self.frame.origin.y, xTranslation: translation.x, index: cellIndex!, cellWidth: self.frame.width, cellHeight: self.frame.height)
+                delegate?.animateAlarmCellShoulder(yPos: self.frame.origin.y, xTranslation: xTranslation, index: cellIndex!, cellWidth: self.frame.width, cellHeight: self.frame.height)
             }else{
                 print("error (DCAlarmTableViewCell): Cell index must exist to animate the shoulder views")
             }
