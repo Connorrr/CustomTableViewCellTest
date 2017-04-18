@@ -44,7 +44,7 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
     }
 
     
-    /// Delegate function:  Stretches the shoulder views with when with the horizontal xTranslation value
+    /// Delegate function:  Stretches the shoulder views with the horizontal xTranslation value
     ///
     /// - Parameters:
     ///   - yPos: Origin Y position for the shoulder view
@@ -80,7 +80,6 @@ class DCAlarmTableView: UITableView, DCAlarmTableViewDelegate {
     func returnToCenter(cell: DCAlarmTableViewCell){
         if (cell.cellIndex != nil) {
             let index = cell.cellIndex!
-            //print("Left SV Width:  \(shoulderViews[index][0].frame.width), right SV W: \(shoulderViews[index][1].frame.width)")
             self.shoulderLayers[index][0].path = nil
             self.shoulderLayers[index][1].path = nil
             

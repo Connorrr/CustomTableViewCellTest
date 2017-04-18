@@ -91,39 +91,19 @@ class TableCellShoulderLayer: CAShapeLayer {
             bottomCP2.x = parentFrame.width - cPX
             bottomCP2.y = parentFrame.height
         }
-        /*
-        if parentFrame.width < cPX * 2 {
-            topCP = CGPoint(x: parentFrame.width / 2, y: topCPY)
-            bottomCP = CGPoint(x: parentFrame.width / 2, y: botCPY)
-            topCP2 = topCP
-            bottomCP2 = bottomCP
+ 
+        if isLeftShoulder {
+            topCP = CGPoint(x: cPX, y: topCPY)
+            bottomCP = CGPoint(x: cPX, y: botCPY)
         }else{
-            if parentFrame.width < cPX * 4 {    //  Second Phase of Animation
-                if isLeftShoulder {
-                    topCP = CGPoint(x: cPX, y: topCPY)
-                    bottomCP = CGPoint(x: cPX, y: botCPY)
-                    topCP2.x = parentFrame.width - (parentFrame.width - cPX * 2)
-                    bottomCP2.x = parentFrame.width - (parentFrame.width - cPX * 2)
-                }else{
-                    topCP = CGPoint(x: parentFrame.width-cPX, y: topCPY)
-                    bottomCP = CGPoint(x: parentFrame.width-cPX, y: botCPY)
-                    topCP2.x = parentFrame.width - (parentFrame.width - cPX)
-                    bottomCP2.x = parentFrame.width - (parentFrame.width - cPX)
-                }
-            }else{      //  Third phase of animation
- */
-                if isLeftShoulder {
-                    topCP = CGPoint(x: cPX, y: topCPY)
-                    bottomCP = CGPoint(x: cPX, y: botCPY)
-                }else{
-                    topCP = CGPoint(x: parentFrame.width-cPX, y: topCPY)
-                    bottomCP = CGPoint(x: parentFrame.width-cPX, y: botCPY)
-                }
-            //}
-        //}
+            topCP = CGPoint(x: parentFrame.width-cPX, y: topCPY)
+            bottomCP = CGPoint(x: parentFrame.width-cPX, y: botCPY)
+        }
+
         if isLeftShoulder {
             print("TopCPY: \(topCP.y), TopCPX: \(topCP.x), TopCPY2: \(topCP2.y), TopCPX2: \(topCP2.x)")
         }
+        
         path.move(to: topLeft)
         path.addLine(to: topLeftShelf)
         if isLeftShoulder {
